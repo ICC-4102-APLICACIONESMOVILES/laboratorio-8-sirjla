@@ -1,11 +1,14 @@
 package cl.magnet.mobileappsexample;
 
+import android.app.Fragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,21 +36,14 @@ import cl.magnet.mobileappsexample.network.NetworkManager;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FormsListFragment.OnListFragmentInteractionListener {
 
+    FragmentManager fragmentManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -58,7 +54,16 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        fragmentManager = getSupportFragmentManager();
 
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        FormsListFragment formList = new FormsListFragment();
+        formList.setArguments(getIntent().getExtras());
+
+        transaction.replace(R.id.fragment_container, formList);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override
@@ -104,8 +109,24 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+            createForm formList = new createForm();
+            formList.setArguments(getIntent().getExtras());
+
+            transaction.replace(R.id.fragment_container, formList);
+            transaction.addToBackStack(null);
+            transaction.commit();
+
         } else if (id == R.id.nav_gallery) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+            FormsListFragment formList = new FormsListFragment();
+            formList.setArguments(getIntent().getExtras());
+
+            transaction.replace(R.id.fragment_container, formList);
+            transaction.addToBackStack(null);
+            transaction.commit();
 
         } else if (id == R.id.nav_slideshow) {
 
